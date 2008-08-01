@@ -1,26 +1,44 @@
+	# Load the Module::Install bundled in ./inc/
+	use inc::Module::Install;
 
+	# Define metadata
+      name     'WSRF-Lite';
+      all_from 'lib/WSRF/Lite.pm';
+      author   'Mark Mc Keown <Mark.McKeown@manchester.ac.uk>';
+      abstract 'Implementation of WSRF';
+      license  'perl';
+      version  '0.8.2.2.1';
+	
+	# add some requires for modules that dont properly specify dependencies
+	requires 'Params::Validate' 		=> '0.91';
+	requires 'DateTime::Locale'			=> '0.41';
+	requires 'DateTime::TimeZone'		=> '0.78';
+	requires 'IO::Socket::SSL'			=> '1.08';
+	requires 'List::MoreUtils'			=> '0.22';
+	
+	# wsrf requires	
+	requires 'SOAP::Lite'   			=> '0.67';
+	requires 'XML::DOM'     			=> '1.44';
+	requires 'DateTime::Format::Epoch'  => '0.11';
+	requires 'DateTime::Format::W3CDTF' => '0.04';
+	requires 'HTTP::Daemon' 			=> '1.39';
+	requires 'HTTP::Daemon::SSL' 		=> '1.04';
+	requires 'MIME::Base64' 			=> '3.07';
+	requires 'Digest::SHA1' 			=> '2.11';
+	requires 'Crypt::OpenSSL::RSA' 		=> '0.22';
+	requires 'Sys::Hostname::Long' 		=> '1.4';
+	# requires libxml2 on your system
+	requires 'XML::LibXML'		        => '1.64';
+	# not windows compatible ...
+	if ( not( $^O =~ /MSWin32|Windows_NT/i ) ) {
+		requires 'Crypt::OpenSSL::X509' 	=> '0.7';
+	}
+	
+	build_requires 'Test::More'   => '0.42';
+	build_requires 'Test::Simple' => '0.44';
 
-use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
-WriteMakefile(
-    NAME         => 'WSRF::Lite',
-    VERSION_FROM => 'lib/WSRF/Lite.pm', # finds \$VERSION
-    AUTHOR       => 'Mark Mc Keown (Mark.McKeown@manchester.ac.uk)',
-    ABSTRACT     => 'Implementation of WSRF',
-    PREREQ_PM    => {
-                     'Test::Simple' => 0.44,
-		     'SOAP::Lite'   => 0.65,
-		     'XML::DOM'     => '',
-		     'DateTime::Format::Epoch'  => '',
-		     'DateTime::Format::W3CDTF' => '',
-		     'HTTP::Daemon' => '',
-		     'HTTP::Daemon::SSL' => '',
-		     'MIME::Base64' => '',
-		     'Digest::SHA1' => '',
-		     'Crypt::OpenSSL::X509' => '',
-		     'Crypt::OpenSSL::RSA' => '',
-		     'XML::CanonicalizeXML' => 0.02,
-		     'Sys::Hostname::Long' => ''
-                    },
-);
+    #no_index       'client-scripts';
+    #no_index       'test';
+	auto_install;
+	WriteAll;
+
