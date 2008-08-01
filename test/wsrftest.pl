@@ -726,7 +726,7 @@ while(<>) {
 		           last SWITCH; 
 		      };						
 			
-		   print "Cann't understand: $_";
+		   print "Can't understand: $_";
 		}
 
 	}
