@@ -37,6 +37,7 @@
 	build_requires 'Test::More'   => '0.42';
 	build_requires 'Test::Simple' => '0.44';
 
+    no_index       'modules';
     #no_index       'client-scripts';
     #no_index       'test';
 	auto_install;
