@@ -5,7 +5,7 @@ BEGIN {
 };
 
 
-use WSRF::Lite +trace =>  debug => sub {};
+use WSRF::Lite + trace =>  debug => sub {};
 #use WSRF::Lite;
 
 #need to point to users certificates - these are only used
