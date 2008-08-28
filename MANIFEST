@@ -16,6 +16,7 @@ client-scripts/wsrf_setTerminationTime.pl
 client-scripts/wsrf_updateResourceProperty.pl
 Container.pl
 CPAN_help
+Changes
 docs/gr-buildsecure-a4.pdf
 docs/README
 docs/wsrfajax.pdf
