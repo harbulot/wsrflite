@@ -698,7 +698,7 @@ sub envelope {
 	my $envelope = $self->std_envelope(@_);
 
 	#if the user has defined these env then he wants the envlope signed -
-	#we take the envelope created in the above step and do the necessary
+	#we take the envelope  in the above step and do the necessary
 	if ( defined( $ENV{WSS_SIGN} ) ) {
 
 		#call the function to sign the envlope - returns the Header and Body
@@ -1310,9 +1310,11 @@ sub getProperties {
 	eval { require XML::LibXML };
 	if ( !$@ )    #we have XML::LibXML, so we can strip the SOAP stuff
 	{
-		my $xpath = '<XPath xmlns:wsrp="' . $WSRF::Constants::WSRP . '">
-(//. | //@* | //namespace::*)[ancestor-or-self::wsrp:ResourceProperties]
-</XPath>';
+		#my $xpath = '<XPath xmlns:wsrp="'
+		# . $WSRF::Constants::WSRP
+		# . '">(//. | //@* | //namespace::*)[ancestor-or-self::wsrp:ResourceProperties]</XPath>';
+		my $xpath = '(//. | //@* | //namespace::*)[ancestor-or-self::wsrp:ResourceProperties]';
+		 
 		my $canon = '<?xml version="1.0" encoding="ISO-8859-1"?>' . "\n";
 		$canon = $canon
 		  . '<?xml-stylesheet type="text/xsl" href="'
@@ -2350,7 +2352,10 @@ Converts a time in seconds since the UNIX Epoch to a W3C date time string.
 use DateTime::Format::W3CDTF;
 use DateTime::Format::Epoch;
 
-# ccnvert XML format Time string to time in seconds since epoch
+# THE EXPIRES_IN variable, rather than hard code 60*60 seconds
+$WSRF::TIME::EXPIRES_IN = 60;
+
+# convert XML format Time string to time in seconds since epoch
 sub ConvertStringToEpochTime {
 	my ($StringTime) = @_;
 
@@ -6095,54 +6100,64 @@ $WSRF::WSS::Sign{Body}                = 1;
 %WSRF::WSS::ID_Xpath = ();
 
 #XPaths to the parts of the SOAP message we want to sign
-$WSRF::WSS::sec_xpath = '<XPath xmlns:wsse="' . $WSRF::Constants::WSSE . '">
-(//. | //@* | //namespace::*)[ancestor-or-self::wsse:BinarySecurityToken]
-    </XPath>';
+$WSRF::WSS::sec_xpath = 
+	  '(//. | //@* | //namespace::*)[ancestor-or-self::wsse:BinarySecurityToken]';
 
-$WSRF::WSS::si_xpath = '<XPath xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-(//. | //@* | //namespace::*)[ancestor-or-self::ds:SignedInfo]
-</XPath>';
+#$WSRF::WSS::sec_xpath = 
+#	  '<XPath xmlns:wsse="' 
+#	. $WSRF::Constants::WSSE
+#	. '">(//. | //@* | //namespace::*)[ancestor-or-self::wsse:BinarySecurityToken]</XPath>';
 
-$WSRF::WSS::timestamp_xpath = '<XPath xmlns:wsu="' . $WSRF::Constants::WSU . '">
-(//. | //@* | //namespace::*)[ancestor-or-self::wsu:Timestamp]
-</XPath>';
+$WSRF::WSS::si_xpath = 
+#	'<XPath xmlns:ds="http://www.w3.org/2000/09/xmldsig#">(//. | //@* | //namespace::*)[ancestor-or-self::ds:SignedInfo]</XPath>';
+	'(//. | //@* | //namespace::*)[ancestor-or-self::ds:SignedInfo]';
+$WSRF::WSS::timestamp_xpath = 
+#	  '<XPath xmlns:wsu="' 
+#	. $WSRF::Constants::WSU 
+#	. '">(//. | //@* | //namespace::*)[ancestor-or-self::wsu:Timestamp]</XPath>';
+	'(//. | //@* | //namespace::*)[ancestor-or-self::wsu:Timestamp]';
 
 $WSRF::WSS::ID_Xpath{MessageID} =
-  '<XPath xmlns:wsa="'
-  . $WSRF::Constants::WSA . '">
-(//. | //@* | //namespace::*)[ancestor-or-self::wsa:MessageID]
-</XPath>';
+#  '<XPath xmlns:wsa="'
+#  . $WSRF::Constants::WSA 
+#  . '">(//. | //@* | //namespace::*)[ancestor-or-self::wsa:MessageID]</XPath>';
+   '(//. | //@* | //namespace::*)[ancestor-or-self::wsa:MessageID]';
 
-$WSRF::WSS::ID_Xpath{To} = '<XPath xmlns:wsa="' . $WSRF::Constants::WSA . '">
-(//. | //@* | //namespace::*)[ancestor-or-self::wsa:To]
-</XPath>';
+$WSRF::WSS::ID_Xpath{To} = 
+#  '<XPath xmlns:wsa="'
+#  . $WSRF::Constants::WSA 
+#  . '">(//. | //@* | //namespace::*)[ancestor-or-self::wsa:To]</XPath>';
+   '(//. | //@* | //namespace::*)[ancestor-or-self::wsa:To]';
 
 $WSRF::WSS::ID_Xpath{Action} =
-  '<XPath xmlns:wsa="'
-  . $WSRF::Constants::WSA . '">
-(//. | //@* | //namespace::*)[ancestor-or-self::wsa:Action]
-</XPath>';
+#  '<XPath xmlns:wsa="'
+#  . $WSRF::Constants::WSA 
+#  . '">(//. | //@* | //namespace::*)[ancestor-or-self::wsa:Action]</XPath>'; 
+  '(//. | //@* | //namespace::*)[ancestor-or-self::wsa:Action]';
 
-$WSRF::WSS::ID_Xpath{From} = '<XPath xmlns:wsa="' . $WSRF::Constants::WSA . '">
-(//. | //@* | //namespace::*)[ancestor-or-self::wsa:From]
-</XPath>';
+$WSRF::WSS::ID_Xpath{From} = 
+#  '<XPath xmlns:wsa="'
+#   . $WSRF::Constants::WSA
+#   . '">(//. | //@* | //namespace::*)[ancestor-or-self::wsa:From]</XPath>';
+   '(//. | //@* | //namespace::*)[ancestor-or-self::wsa:From]';
 
 $WSRF::WSS::ID_Xpath{ReplyTo} =
-  '<XPath xmlns:wsa="'
-  . $WSRF::Constants::WSA . '">
-(//. | //@* | //namespace::*)[ancestor-or-self::wsa:ReplyTo]
-</XPath>';
+#  '<XPath xmlns:wsa="'
+#  . $WSRF::Constants::WSA
+#  . '">(//. | //@* | //namespace::*)[ancestor-or-self::wsa:ReplyTo]</XPath>';
+  '(//. | //@* | //namespace::*)[ancestor-or-self::wsa:ReplyTo]';
 
 $WSRF::WSS::ID_Xpath{RelatesTo} =
-  '<XPath xmlns:wsa="'
-  . $WSRF::Constants::WSA . '">
-(//. | //@* | //namespace::*)[ancestor-or-self::wsa:RelatesTo]
-</XPath>';
+#  '<XPath xmlns:wsa="'
+#  . $WSRF::Constants::WSA 
+#  . '">(//. | //@* | //namespace::*)[ancestor-or-self::wsa:RelatesTo]</XPath>';
+  '(//. | //@* | //namespace::*)[ancestor-or-self::wsa:RelatesTo]';
 
 $WSRF::WSS::body_xpath =
-"<XPath xmlns:$SOAP::Constants::PREFIX_ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-  . '(//. | //@* | //namespace::*)'
-  . "[ancestor-or-self::$SOAP::Constants::PREFIX_ENV:Body]</XPath>";
+#"<XPath xmlns:$SOAP::Constants::PREFIX_ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+#  . '(//. | //@* | //namespace::*)'
+#  . "[ancestor-or-self::$SOAP::Constants::PREFIX_ENV:Body]</XPath>";
+  '(//. | //@* | //namespace::*)' . "[ancestor-or-self::$SOAP::Constants::PREFIX_ENV:Body]";
 
 $WSRF::WSS::priv_key = undef;
 $WSRF::WSS::pub_key  = undef;
@@ -6223,7 +6238,8 @@ sub sign {
 		  if defined( $WSRF::WSS::Sign{$key} );
 		my $parser = XML::LibXML->new();
 		my $doc    = $parser->parse_string($envelope);
-		my $canon  = $doc->toStringEC14N( 0, $WSRF::WSS::ID_Xpath{$key}, [''] );
+		my $canon = undef;
+		eval {$canon  = $doc->toStringEC14N( 0, $WSRF::WSS::ID_Xpath{$key}, [''] );};
 		$header .= defined($canon) ? $canon : "";
 	}
 
@@ -6255,7 +6271,7 @@ sub sign {
 		  . '</wsu:Created>';
 		$timestamp .=
 		    '<wsu:Expires>'
-		  . WSRF::Time::ConvertEpochTimeToString( time + ( 60 * 60 ) )
+		  . WSRF::Time::ConvertEpochTimeToString( time + $WSRF::TIME::EXPIRES_IN )
 		  . '</wsu:Expires>';
 
 		#$timestamp .= '<wsu:Created>2004-02-07T14:31:59Z</wsu:Created>';
@@ -6322,8 +6338,8 @@ sub make_token {
 	#   print STDERR "Xpath=> $Path\n";
 	my $parser    = XML::LibXML->new();
 	my $doc       = $parser->parse_string($XML);
-	my $can_token = $doc->toStringEC14N( 0, $Path, [''] );
-
+	my $can_token = undef;
+	eval {$can_token = $doc->toStringEC14N( 0, $Path, [''] );};
 	return '' unless $can_token;
 
 	#print STDERR ">>>token-$ID>>>\n$can_token\n<<<token-$ID<<<<\n";
