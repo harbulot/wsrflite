@@ -4,7 +4,7 @@
 # WSRF::Lite is free software; you can redistribute it
 # and/or modify it under the same terms as Perl itself.
 #
-# version 0.8.2.2
+# version 0.8.2.4
 # Author:         Mark Mc Keown (mark.mckeown@manchester.ac.uk)
 #
 # Stefan Zasada (sjzasada@lycos.co.uk) did most of the work implementing
@@ -17,7 +17,7 @@
 #                 Jamie Vicary, Bruno Harbulot
 #                 Ivan Porro, Ross Nicoll, Luke @ yahoo
 #                 Mary Thompson,  Alex Peeters, Bjoern A. Zeeb
-#                 Glen Fu, John Newman, Doug Claar
+#                 Glen Fu, John Newman, Doug Claar, Edward Kawas
 #
 # Some parts of the this module are taken from SOAP::Lite -
 # here is the required copyright
@@ -72,7 +72,7 @@ use strict;
 use vars qw{ $VERSION };
 
 BEGIN {
-	$VERSION = '0.8.2.2';
+	$VERSION = '0.8.2.4';
 }
 
 # WSRF uses WS-Address headers in the SOAP Header - by default
@@ -2348,6 +2348,17 @@ Converts a time in seconds since the UNIX Epoch to a W3C date time string.
 =back
 
 =cut
+
+=head2 VARIABLES
+
+=item EXPIRES_IN
+
+You can specify how long until an item expires with $WSRF::TIME::EXPIRES_IN. This variable defaults to 60 seconds. 
+
+=back
+
+=cut
+
 
 use DateTime::Format::W3CDTF;
 use DateTime::Format::Epoch;
@@ -6271,7 +6282,7 @@ sub sign {
 		  . '</wsu:Created>';
 		$timestamp .=
 		    '<wsu:Expires>'
-		  . WSRF::Time::ConvertEpochTimeToString( time + $WSRF::TIME::EXPIRES_IN )
+		  . WSRF::Time::ConvertEpochTimeToString( time + ($WSRF::TIME::EXPIRES_IN ? $WSRF::TIME::EXPIRES_IN : 60))
 		  . '</wsu:Expires>';
 
 		#$timestamp .= '<wsu:Created>2004-02-07T14:31:59Z</wsu:Created>';
