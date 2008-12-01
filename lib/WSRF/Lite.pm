@@ -2351,6 +2351,8 @@ Converts a time in seconds since the UNIX Epoch to a W3C date time string.
 
 =head2 VARIABLES
 
+=over
+
 =item EXPIRES_IN
 
 You can specify how long until an item expires with $WSRF::TIME::EXPIRES_IN. This variable defaults to 60 seconds. 
