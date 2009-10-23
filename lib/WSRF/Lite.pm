@@ -4,7 +4,7 @@
 # WSRF::Lite is free software; you can redistribute it
 # and/or modify it under the same terms as Perl itself.
 #
-# version 0.8.2.5
+# version 0.8.2.7
 # Author:         Mark Mc Keown (mark.mckeown@manchester.ac.uk)
 #
 # Stefan Zasada (sjzasada@lycos.co.uk) did most of the work implementing
@@ -34,7 +34,7 @@ WSRF::Lite - Implementation of the Web Service Resource Framework
 
 =head1 VERSION
 
-This document refers to version 0.8.2.5 of WSRF::Lite released Dec, 2008
+This document refers to version 0.8.2.7 of WSRF::Lite released Dec, 2008
 
 =head1 SYNOPSIS
 
@@ -72,7 +72,7 @@ use strict;
 use vars qw{ $VERSION };
 
 BEGIN {
-	$VERSION = '0.8.2.5';
+	$VERSION = '0.8.2.7';
 }
 
 # WSRF uses WS-Address headers in the SOAP Header - by default
@@ -5901,7 +5901,7 @@ sub BEGIN {
 	for my $method (
 		qw(autotype readable envprefix encodingStyle
 		encprefix multirefinplace encoding typelookup uri
-		header maptype xmlschema use_prefix)
+		header maptype xmlschema use_prefix ns default_ns)
 	  )
 	{
 		*$method = sub {
@@ -6315,7 +6315,7 @@ sub sign {
 	my $can_signed_info = $doc->toStringEC14N( 0, $WSRF::WSS::si_xpath, [''] );
 
 #   print ">>>can_signed>>>>".MIME::Base64::encode(sha1($can_signed_info))."<<<<<can_aigned<<<<<\n";
-#   print ">>>can_signed>>>>\n".$can_signed_info."\n<<<<<can_aigned<<<<<\n";
+#   print ">>>can_signed_info>>>>\n$can_signed_info\n<<<<<can_signed_info<<<<<\n";
 
 	my $rsa_priv  = WSRF::WSS::load_priv_key();
 	my $signature = $rsa_priv->sign($can_signed_info);
@@ -6340,7 +6340,9 @@ xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-s
 
 	$doc = $parser->parse_string($envelope);
 	my $Body = $doc->toStringEC14N( 0, $WSRF::WSS::body_xpath, [''] );
-
+	#my $Body = $doc->toStringC14N(0,$WSRF::WSS::body_xpath);
+	
+	#print ">>>header newline body>>>>\n$header\n\n$Body\n<<<<<header newline body<<<<<\n";
 	return $header, $Body;
 }
 
